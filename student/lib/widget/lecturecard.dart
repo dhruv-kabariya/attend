@@ -1,12 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../model/user.dart';
+import '../model/records.dart';
 import '../model/lectures.dart';
 import '../model/lecture.dart';
 
-class LectureCard extends StatelessWidget {
+class LectureCard extends StatefulWidget {
   const LectureCard({
     Key key,
   }) : super(key: key);
+
+  @override
+  _LectureCardState createState() => _LectureCardState();
+}
+
+class _LectureCardState extends State<LectureCard> {
+  bool _isLoading = false;
+  bool _isInit = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      Provider.of<Records>(context, listen: false)
+          .record(Provider.of<User>(context).enrollNo)
+          .then((_) => {
+                setState(() {
+                  _isLoading = false;
+                })
+              });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +77,6 @@ class LectureTexts extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        
-      
         Navigator.of(context)
             .pushNamed("/lecture_details", arguments: lecture.sectionId);
       },

@@ -35,7 +35,10 @@ class _LectureDetailState extends State<LectureDetail> {
             ],
           ),
         ),
-        body: TabBarView(children: <Widget>[AboutDetails(lecture), Record()]),
+        body: TabBarView(children: <Widget>[
+          AboutDetails(lecture),
+          Record1(sectionId: sectionId)
+        ]),
       ),
     );
   }

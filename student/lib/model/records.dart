@@ -3,18 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import './record.dart';
-import './user.dart';
 
 class Records with ChangeNotifier {
   List<Record> _record = [];
 
   JsonDecoder _decoder = JsonDecoder();
 
-  Future<void> record(int enrollment_id) async {
-    String url = "http://192.168.56.1:8000/api" + "records/";
+  Future<void> record(int enrollmentId) async {
+    String url = "http://192.168.56.1:8000/api" + "/records/";
 
-    Map<String, int> body;
-    body["student_id"] = enrollment_id;
+    var body = Map<String, int>();
+    body["student_id"] = enrollmentId;
 
     Map<String, String> header = {"Content-type": "application/json"};
 
@@ -45,5 +44,17 @@ class Records with ChangeNotifier {
 
   List<Record> get records {
     return _record;
+  }
+
+  List<Record> course(int sectionId) {
+    List<Record> _temp = [];
+
+    for (int i = 0; i < _record.length; i++) {
+      if (_record[i].sectionId == sectionId) {
+        _temp.add(_record[i]);
+      }
+    }
+
+    return _temp;
   }
 }

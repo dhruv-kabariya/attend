@@ -7,6 +7,7 @@ import './pages/lec_details_page.dart';
 import './model/user.dart';
 import './pages/home.dart';
 import './model/lectures.dart';
+import './model/records.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: Lectures(),
-        )
+        ),
+        ChangeNotifierProvider.value(value: Records()),
       ],
       child: Consumer<User>(
         builder: (context, user, _) => MaterialApp(

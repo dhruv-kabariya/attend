@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../widget/recordDetails.dart';
+import '../model/records.dart';
+import '../model/record.dart';
 
-class Record extends StatelessWidget {
+class Record1 extends StatelessWidget {
+  int sectionId;
+  Record1({this.sectionId});
   @override
   Widget build(BuildContext context) {
     double block_heigth = MediaQuery.of(context).size.height / 100;
-    double block_width = MediaQuery.of(context).size.width / 100;
+    List<Record> record = Provider.of<Records>(context).course(sectionId);
 
     return Column(
       children: <Widget>[
@@ -18,8 +22,9 @@ class Record extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemBuilder: (context, index) => Recordetails(),
-            itemCount: 15,
+            itemBuilder: (context, index) => ChangeNotifierProvider.value(
+                value: record[index], child: Recordetails()),
+            itemCount: record.length,
           ),
         )
       ],

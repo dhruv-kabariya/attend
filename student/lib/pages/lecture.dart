@@ -25,6 +25,7 @@ class _Lecture1State extends State<Lecture1> {
       setState(() {
         _isLoading = true;
       });
+
       Provider.of<Lectures>(context, listen: false)
           .dashboard(Provider.of<User>(context).enrollNo.toString())
           .then((_) {
@@ -33,6 +34,7 @@ class _Lecture1State extends State<Lecture1> {
         });
       });
     }
+
     _isInit = false;
 
     super.didChangeDependencies();

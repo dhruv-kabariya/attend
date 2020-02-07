@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 
-class Record {
+class Record extends ChangeNotifier {
   int sectionId;
   bool attend;
-  DateTime date;
+  String date;
 
   Record(
-      {@required int sectionId,
-      @required bool attend,
-      @required DateTime date}) {
+      {@required int sectionId, @required bool attend, @required String date}) {
     this.attend = attend;
     this.sectionId = sectionId;
     this.date = date;
