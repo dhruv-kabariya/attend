@@ -5,12 +5,12 @@ import 'package:http/http.dart' as http;
 import './record.dart';
 
 class Records with ChangeNotifier {
-  List<Record> _record = [];
+  static List<Record> _record = [];
 
   JsonDecoder _decoder = JsonDecoder();
 
   Future<void> record(int enrollmentId) async {
-    String url = "http://192.168.56.1:8000/api" + "/records/";
+    String url = "http://192.168.1.6:8000/api" + "/records/";
 
     var body = Map<String, int>();
     body["student_id"] = enrollmentId;
@@ -56,5 +56,10 @@ class Records with ChangeNotifier {
     }
 
     return _temp;
+  }
+
+  void adding(bool attend, String date, int sectionId) {
+    _record.add(Record(attend: attend, date: date, sectionId: sectionId));
+    notifyListeners();
   }
 }

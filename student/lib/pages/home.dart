@@ -1,29 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import 'lecture.dart';
+import '../model/scan.dart';
+import '../model/user.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List result = ['hello'];
-    String temp;
-    String error;
     double blockHeight = (MediaQuery.of(context).size.height) / 100;
     double blockWidth = (MediaQuery.of(context).size.width) / 100;
-
-    Future<String> scan() async {
-      try {
-        temp = await BarcodeScanner.scan();
-        print(temp);
-      } on PlatformException catch (ex) {
-        error = ex.code;
-      } catch (ex) {
-        error = ex;
-      }
-      return temp;
-    }
+    int enrollNo = Provider.of<User>(context, listen: false).enrollment_id;
 
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +62,8 @@ class Home extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: scan,
+        onPressed: () =>
+            Provider.of<Scan>(context, listen: false).attend(enrollNo),
         shape: CircleBorder(),
         child: Container(
           decoration: BoxDecoration(shape: BoxShape.circle),

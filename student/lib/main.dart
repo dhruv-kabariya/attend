@@ -8,6 +8,7 @@ import './model/user.dart';
 import './pages/home.dart';
 import './model/lectures.dart';
 import './model/records.dart';
+import './model/scan.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
           value: Lectures(),
         ),
         ChangeNotifierProvider.value(value: Records()),
+        ChangeNotifierProvider.value(value: Scan())
       ],
       child: Consumer<User>(
         builder: (context, user, _) => MaterialApp(

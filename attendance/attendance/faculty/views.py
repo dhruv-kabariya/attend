@@ -49,6 +49,10 @@ def generateQr(request):
 
     if request.method == "POST":
         sid = request.POST["sec_id"]
+        try:
+            obj = Sections.objects.get(section_id=sid)
+        except Sections.DoesNotExist:
+            return HttpResponse("Not exist")
         w = generating(sid)
         return HttpResponse(w)
 

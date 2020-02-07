@@ -12,7 +12,7 @@ class Lectures with ChangeNotifier {
   // Lectures({this.enroll});
 
   Future<void> dashboard(String enroll) async {
-    String url = "http://192.168.56.1:8000/api" + "/enrolled/";
+    String url = "http://192.168.1.6:8000/api" + "/enrolled/";
     Map<String, String> headers = {"Content-type": "application/json"};
 
     var body = Map<String, String>();
