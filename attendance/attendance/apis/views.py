@@ -161,11 +161,27 @@ class Attend(APIView):
 
             if (obj != None) or (obj.student_id != student_id):
 
-                if (obj.time + timedelta(hours=1, minutes=20)) < timezone.now():
+                if (obj.time + timedelta(seconds=10)) > timezone.now():
+                    rec = attendace_record.objects.create(
+                        students_id=s, section_id=sec, attend=True
+                    )
+                    rec.save()
+                    serializer = attendace_record_serializer(rec)
+                    return Response(serializer.data)
+
+                elif (obj.time + timedelta(hours=1, minutes=20)) < timezone.now():
                     obj.time = timezone.now()
                     obj.section_id = sec
 
                     obj.save()
+
+                    rec = attendace_record.objects.create(
+                        students_id=s, section_id=sec, attend=True
+                    )
+                    rec.save()
+                    serializer = attendace_record_serializer(rec)
+                    return Response(serializer.data)
+
                 else:
                     return Response(
                         {
@@ -183,15 +199,6 @@ class Attend(APIView):
                 {"details": "You are not in this section"},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-
-        if obj != None:
-
-            rec = attendace_record.objects.create(
-                students_id=s, section_id=sec, attend=True
-            )
-            rec.save()
-        serializer = attendace_record_serializer(rec)
-        return Response(serializer.data)
 
 
 class Attend_Record(generics.ListCreateAPIView):

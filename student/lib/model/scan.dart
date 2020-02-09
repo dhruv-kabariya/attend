@@ -52,7 +52,8 @@ class Scan extends ChangeNotifier {
   }
 
   Future<String> call(Map<String, dynamic> body) async {
-    String url = "http://192.168.1.6:8000/api" + "/attend/";
+    String url = "http://192.168.43.3:8000/api" + "/attend/";
+    String url1 = "http://10.1.53.92:8000/api" + "/attend/";
     Map<String, String> header = {"Content-type": "application/json"};
 
     var res = await http

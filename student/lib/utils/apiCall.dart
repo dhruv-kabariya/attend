@@ -6,7 +6,9 @@ import './networkUtils.dart';
 class ApiCall {
   NetworkUtils _net = NetworkUtils();
 
-  static final String baseUrl = "http://192.168.1.6:8000/api";
+  static final String baseUrl = "http://192.168.43.3:8000/api";
+  static final String baseUrl1 = "http://10.1.53.92:8000/api";
+
   static final String loginUrl = baseUrl + "/login/";
   static final String dashbodDeatils = baseUrl + "/enrolled/";
   static final String recordDetails = dashbodDeatils + "/record/";

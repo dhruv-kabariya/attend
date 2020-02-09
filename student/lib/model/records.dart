@@ -10,7 +10,8 @@ class Records with ChangeNotifier {
   JsonDecoder _decoder = JsonDecoder();
 
   Future<void> record(int enrollmentId) async {
-    String url = "http://192.168.1.6:8000/api" + "/records/";
+    String baseUrl1 = "http://10.1.53.92:8000/api" + "/records/";
+    String url = "http://192.168.43.3:8000/api" + "/records/";
 
     var body = Map<String, int>();
     body["student_id"] = enrollmentId;
