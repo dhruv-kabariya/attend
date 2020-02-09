@@ -18,22 +18,22 @@ class Scan extends ChangeNotifier {
 
   JsonDecoder _decoder = JsonDecoder();
 
-  void attend(int enrollNo) {
+  Future<String> attend(int enrollNo) async {
     var body = Map<String, dynamic>();
     scan();
     Duration(seconds: 5);
-    body["section_id"] = 1011;
+    body["section_id"] = result;
     body["student_id"] = enrollNo;
     body["mac"] = "g1hgxhg3b1hxgz";
     body["ip"] = ip;
     body["AndroidId"] = ai;
-    call(body);
+    String staus = await call(body);
+    return staus;
   }
 
   Future<void> scan() async {
     try {
       result = await BarcodeScanner.scan();
-      print(result);
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         error = true;
@@ -51,7 +51,7 @@ class Scan extends ChangeNotifier {
     }
   }
 
-  Future<void> call(Map<String, dynamic> body) async {
+  Future<String> call(Map<String, dynamic> body) async {
     String url = "http://192.168.1.6:8000/api" + "/attend/";
     Map<String, String> header = {"Content-type": "application/json"};
 
@@ -64,13 +64,21 @@ class Scan extends ChangeNotifier {
       print(response.body);
 
       if (statusCode > 400 || statusCode < 200) {
-        throw Exception("Error Attend");
+        if (statusCode == 401) {
+          return _decoder.convert(body);
+        } else {
+          throw Exception("Error");
+        }
       }
 
       return _decoder.convert(body);
     });
-
-    rec.adding(body["attend"], body["date"], body["section_id"]);
+    if (res.containsKey("details")) {
+      return res["details"];
+    } else {
+      rec.adding(res["attend"], res["date"], res["section_id"]);
+      return "Attendance taken SuccessFul";
+    }
   }
 
   Future<void> deviceInfo() async {

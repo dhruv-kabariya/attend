@@ -7,6 +7,7 @@ from rest_framework import generics
 from rest_framework import mixins
 from datetime import datetime, timedelta
 from django.utils import timezone
+from rest_framework import status
 
 from .models import (
     Students,
@@ -119,27 +120,30 @@ class EnrolledView(generics.ListCreateAPIView):
 class Attend(APIView):
     def getObj(self, id, sec):
 
-        user = Enrolled.objects.get(section_id=sec, students_id=id)
-        if user:
-            return True
+        try:
 
-        return False
+            user = Enrolled.objects.get(section_id=sec, students_id=id)
+            return True
+        except:
+            return False
 
     def lastIn(self, mac, student_id, section_id):
 
         try:
 
             user = Hash.objects.get(mac=mac)
+            return user
         except:
             s = Students.objects.get(enrollment_no=student_id)
             sec = Sections.objects.get(section_id=section_id)
-            user = Hash(section_id=sec, student_id=s, mac=mac)
-
-            user.save()
-
-            user = Hash.objects.get(mac=mac)
-
-        return user
+            try:
+                user = Hash.objects.get(student_id=student_id)
+                user.mac = mac
+                return user
+            except:
+                user = Hash(section_id=sec, student_id=s, mac=mac)
+                user.save()
+                return user
 
     def post(self, request, formate=None):
 
@@ -149,25 +153,36 @@ class Attend(APIView):
 
         ans = self.getObj(student_id, section_id)
 
-        s = Students.objects.get(enrollment_no=student_id)
-        sec = Sections.objects.get(section_id=section_id)
-
         if ans:
+            s = Students.objects.get(enrollment_no=student_id)
+            sec = Sections.objects.get(section_id=section_id)
 
             obj = self.lastIn(mac, student_id, section_id)
 
-            if (obj.time + timedelta(hours=1, minutes=20)) < timezone.now():
+            if (obj != None) or (obj.student_id != student_id):
 
-                if obj != None:
-                    obj.mac = mac
+                if (obj.time + timedelta(hours=1, minutes=20)) < timezone.now():
                     obj.time = timezone.now()
                     obj.section_id = sec
 
                     obj.save()
+                else:
+                    return Response(
+                        {
+                            "details": "You are not authorized to attend ,try after some time"
+                        },
+                        status=status.HTTP_401_UNAUTHORIZED,
+                    )
             else:
-                return Response({"details": "You are trying to do proxy"})
+                return Response(
+                    {"details": "You are trying to do proxy"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
         else:
-            return Http404
+            return Response(
+                {"details": "You are not in this section"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
         if obj != None:
 

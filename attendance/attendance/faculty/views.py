@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 sys.path.append("..")
 from django.shortcuts import redirect, reverse
-from apis.models import Faculty, Sections, Hash
+from apis.models import Faculty, Sections, Hash, Enrolled
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
@@ -34,14 +34,29 @@ def login(request):
 
 
 def saveAttend(request):
+    count = 0
 
     if request.method == "POST":
 
         section_id = request.POST["section_id"]
-        total = Sections.objects.get(section_id=section_id).no_of_intake
-        attend = Hash.objects.filter(section_id=section_id).count()
-
-        context = {"total_student": total, "attended": attend}
+        total = Enrolled.objects.filter(section_id=section_id)
+        attend = Hash.objects.filter(section_id=section_id)
+        if len(attend) > 1:
+            for i in range(len(total)):
+                user = total[i]
+                real = attend[i]
+                if user.students_id == real.student_id:
+                    count += 1
+                else:
+                    rec = attendace_record.objects.create(
+                        students_id=total[i].students_id,
+                        section_id=section_id,
+                        attend=False,
+                    )
+                    rec.save()
+        else:
+            count = 0
+        context = {"total_student": len(total), "attended": count}
         return JsonResponse(context)
 
 

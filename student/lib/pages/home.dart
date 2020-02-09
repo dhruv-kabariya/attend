@@ -12,6 +12,31 @@ class Home extends StatelessWidget {
     double blockWidth = (MediaQuery.of(context).size.width) / 100;
     int enrollNo = Provider.of<User>(context, listen: false).enrollment_id;
 
+    Future<void> scan() async {
+      String b =
+          await Provider.of<Scan>(context, listen: false).attend(enrollNo);
+
+      return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Status'),
+              content: Container(
+                child: Text(b),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Attendace'),
@@ -62,8 +87,7 @@ class Home extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            Provider.of<Scan>(context, listen: false).attend(enrollNo),
+        onPressed: scan,
         shape: CircleBorder(),
         child: Container(
           decoration: BoxDecoration(shape: BoxShape.circle),

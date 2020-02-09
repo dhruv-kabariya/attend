@@ -85,5 +85,5 @@ class Hash(models.Model):
 
     student_id = models.ForeignKey(Students, on_delete=models.CASCADE)
     section_id = models.ForeignKey(Sections, on_delete=models.CASCADE)
-    mac = models.CharField(max_length=256)
+    mac = models.CharField(max_length=256, unique=True)
     time = models.DateTimeField(auto_now_add=True)
